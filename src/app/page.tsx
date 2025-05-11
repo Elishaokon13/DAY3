@@ -1,18 +1,11 @@
 'use client';
 
-import { Web3ReactProvider } from '@web3-react/core';
-import { ethers } from 'ethers';
 import { WalletConnect } from '@/components/WalletConnect';
-
-function getLibrary(provider: any) {
-  const library = new ethers.providers.Web3Provider(provider);
-  library.pollingInterval = 12000;
-  return library;
-}
+import { Web3Provider } from '@/components/Web3Provider';
 
 export default function Home() {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <Web3Provider>
       <main className="min-h-screen p-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-8">ETH Buying AI Agent</h1>
@@ -21,6 +14,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-    </Web3ReactProvider>
+    </Web3Provider>
   );
 }

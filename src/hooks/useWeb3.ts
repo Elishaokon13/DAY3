@@ -12,11 +12,13 @@ export const useWeb3 = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const currentAccount = await getAccount();
-        const currentNetwork = await getNetwork();
-        
-        setAccount(currentAccount);
-        setNetwork(currentNetwork?.chainId || null);
+        if (typeof window !== 'undefined' && window.ethereum) {
+          const currentAccount = await getAccount();
+          const currentNetwork = await getNetwork();
+          
+          setAccount(currentAccount);
+          setNetwork(currentNetwork?.chainId || null);
+        }
       } catch (error) {
         console.error('Failed to initialize Web3:', error);
       } finally {
@@ -30,7 +32,7 @@ export const useWeb3 = () => {
   const connect = async () => {
     try {
       setLoading(true);
-      await activate(injected);
+      await activate(injected, undefined, true);
       const currentAccount = await getAccount();
       const currentNetwork = await getNetwork();
       
