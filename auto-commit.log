@@ -171,3 +171,7 @@ Press Ctrl+C to stop the script
  create mode 100644 public/card-icons/visa.svg
 [0;32mChanges committed successfully![0m
 [1;33mChanges detected at 2025-05-11 17:16:43[0m
+[main e19be08] 2025-05-11 17:16:43
+ 3 files changed, 166 insertions(+), 10 deletions(-)
+ create mode 100644 src/app/api/process-payment/route.ts
+[0;32mChanges committed successfully![0m
