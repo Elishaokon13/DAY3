@@ -5,7 +5,9 @@ import { ethers } from 'ethers';
 import { WalletConnect } from '@/components/WalletConnect';
 
 function getLibrary(provider: any) {
-  return new ethers.providers.Web3Provider(provider);
+  const library = new ethers.providers.Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
 }
 
 export default function Home() {
