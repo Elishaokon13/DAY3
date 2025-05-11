@@ -175,3 +175,4 @@ Press Ctrl+C to stop the script
  3 files changed, 166 insertions(+), 10 deletions(-)
  create mode 100644 src/app/api/process-payment/route.ts
 [0;32mChanges committed successfully![0m
+[1;33mChanges detected at 2025-05-11 17:17:43[0m

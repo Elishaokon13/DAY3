@@ -9,6 +9,14 @@ type ValidationState = {
   amount: boolean;
 };
 
+type Transaction = {
+  id: string;
+  amount: string;
+  timestamp: string;
+  status: 'success' | 'failed';
+  cardType: CardType;
+};
+
 export const PaymentInterface: React.FC = () => {
   const { isConnected } = useWeb3();
   const [amount, setAmount] = useState<string>('');
@@ -24,6 +32,22 @@ export const PaymentInterface: React.FC = () => {
     amount: true,
   });
   const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+  // Load transactions from localStorage on mount
+  useEffect(() => {
+    const savedTransactions = localStorage.getItem('transactions');
+    if (savedTransactions) {
+      setTransactions(JSON.parse(savedTransactions));
+    }
+  }, []);
+
+  // Save transactions to localStorage when updated
+  useEffect(() => {
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+  }, [transactions]);
 
   // Format card number with spaces
   const formatCardNumber = (value: string) => {
@@ -178,11 +202,30 @@ export const PaymentInterface: React.FC = () => {
     
     setLoading(true);
     setError('');
+    setSuccess('');
     
     try {
-      await processPayment();
-      // TODO: Handle successful payment
-      console.log(`Successfully processed ${amount} ETH payment via ${cardType} card`);
+      const result = await processPayment();
+      
+      // Add transaction to history
+      const newTransaction: Transaction = {
+        id: result.transactionId,
+        amount,
+        timestamp: result.timestamp,
+        status: 'success',
+        cardType,
+      };
+      
+      setTransactions(prev => [newTransaction, ...prev]);
+      setSuccess(`Successfully purchased ${amount} ETH!`);
+      
+      // Clear form
+      setAmount('');
+      setCardNumber('');
+      setExpiryDate('');
+      setCvv('');
+      setCardType('unknown');
+      
     } catch (error) {
       setError('Payment failed. Please try again.');
       console.error('Payment failed:', error);
@@ -202,11 +245,62 @@ export const PaymentInterface: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4">Buy ETH with Card</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-semibold">Buy ETH with Card</h2>
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            className="text-blue-600 hover:text-blue-700"
+          >
+            {showHistory ? 'Hide History' : 'Show History'}
+          </button>
+        </div>
         
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-600">{error}</p>
+          </div>
+        )}
+        
+        {success && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-600">{success}</p>
+          </div>
+        )}
+        
+        {showHistory && transactions.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-lg font-medium mb-2">Transaction History</h3>
+            <div className="space-y-2">
+              {transactions.map((tx) => (
+                <div
+                  key={tx.id}
+                  className="p-3 bg-gray-50 rounded-lg flex items-center justify-between"
+                >
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={`/card-icons/${tx.cardType}.svg`}
+                      alt={tx.cardType}
+                      className="h-6 w-auto"
+                    />
+                    <div>
+                      <p className="font-medium">{tx.amount} ETH</p>
+                      <p className="text-sm text-gray-500">
+                        {new Date(tx.timestamp).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    className={`px-2 py-1 rounded text-sm ${
+                      tx.status === 'success'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}
+                  >
+                    {tx.status}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
         
