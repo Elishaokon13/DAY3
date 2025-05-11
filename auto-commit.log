@@ -163,3 +163,10 @@ Press Ctrl+C to stop the script
 [0;32mChanges committed successfully![0m
 [1;33mNo changes detected at 2025-05-11 17:14:43[0m
 [1;33mChanges detected at 2025-05-11 17:15:43[0m
+[main 8ce5a84] 2025-05-11 17:15:43
+ 5 files changed, 27 insertions(+)
+ create mode 100644 public/card-icons/amex.svg
+ create mode 100644 public/card-icons/discover.svg
+ create mode 100644 public/card-icons/mastercard.svg
+ create mode 100644 public/card-icons/visa.svg
+[0;32mChanges committed successfully![0m
