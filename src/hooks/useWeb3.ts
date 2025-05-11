@@ -4,10 +4,11 @@ import { injected } from '@/utils/web3';
 import { getAccount, getNetwork } from '@/utils/web3';
 
 export const useWeb3 = () => {
-  const { activate, deactivate, active, account: web3Account, chainId } = useWeb3React();
+  const { activate, deactivate, active, account: web3Account, chainId, library } = useWeb3React();
   const [account, setAccount] = useState<string | null>(null);
   const [network, setNetwork] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -21,6 +22,7 @@ export const useWeb3 = () => {
         }
       } catch (error) {
         console.error('Failed to initialize Web3:', error);
+        setError('Failed to initialize Web3');
       } finally {
         setLoading(false);
       }
@@ -32,6 +34,12 @@ export const useWeb3 = () => {
   const connect = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
+      if (!window.ethereum) {
+        throw new Error('Please install MetaMask to use this feature');
+      }
+
       await activate(injected, undefined, true);
       const currentAccount = await getAccount();
       const currentNetwork = await getNetwork();
@@ -40,6 +48,7 @@ export const useWeb3 = () => {
       setNetwork(currentNetwork?.chainId || null);
     } catch (error) {
       console.error('Failed to connect wallet:', error);
+      setError(error instanceof Error ? error.message : 'Failed to connect wallet');
     } finally {
       setLoading(false);
     }
@@ -50,8 +59,10 @@ export const useWeb3 = () => {
       deactivate();
       setAccount(null);
       setNetwork(null);
+      setError(null);
     } catch (error) {
       console.error('Failed to disconnect wallet:', error);
+      setError('Failed to disconnect wallet');
     }
   };
 
@@ -59,8 +70,10 @@ export const useWeb3 = () => {
     account,
     network,
     loading,
+    error,
     connect,
     disconnect,
     isConnected: active,
+    library,
   };
 }; 
