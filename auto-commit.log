@@ -65,3 +65,4 @@ Press Ctrl+C to stop the script
  rename {eth-buying-ai/src => src}/app/page.tsx (100%)
  rename eth-buying-ai/tsconfig.json => tsconfig.json (100%)
 [0;32mChanges committed successfully![0m
+[1;33mChanges detected at 2025-05-11 16:12:24[0m
