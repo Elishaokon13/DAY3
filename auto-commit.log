@@ -66,3 +66,8 @@ Press Ctrl+C to stop the script
  rename eth-buying-ai/tsconfig.json => tsconfig.json (100%)
 [0;32mChanges committed successfully![0m
 [1;33mChanges detected at 2025-05-11 16:12:24[0m
+[main 67c49c5] 2025-05-11 16:12:24
+ 5 files changed, 1754 insertions(+), 23 deletions(-)
+ create mode 100644 src/hooks/useWeb3.ts
+ create mode 100644 src/utils/web3.ts
+[0;32mChanges committed successfully![0m
