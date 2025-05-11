@@ -8,3 +8,4 @@ Press Ctrl+C to stop the script
  create mode 100644 auto-commit.log
  create mode 100755 scripts/auto-commit.sh
 [0;32mChanges committed successfully![0m
+[1;33mNo changes detected at 2025-05-11 16:04:24[0m
